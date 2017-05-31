@@ -5,7 +5,7 @@
 apache middleware for prerendering javascript-rendered pages with https://www.prerender.cloud for isomorphic/universal server side rendering
 
 ## Usage
-* The www/.htaccess file is intended as a drop in config for a single standard, single Apache static host serving a single page application (redirects 404s to index.html)
+* The [www/.htaccess](www/.htaccess) file is intended as a drop in config for a single standard, single Apache static host serving a single page application (redirects 404s to index.html)
   * You can also copy and paste parts or all of the config into your own Apache configuration
 
 ### Docker usage
