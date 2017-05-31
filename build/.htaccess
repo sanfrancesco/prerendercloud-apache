@@ -1,0 +1,54 @@
+# instructions
+# 1. Uncomment and change YOUR_TOKEN to your prerender.cloud token (after you've created an account at prerender.cloud)
+# 2. optionally enable the "bots only" config (uncomment 2 lines) - otherwise, the default is to prerender all requests
+
+# assumptions
+# 1. your <Directory /> config has `AllowOverride All` so that this .htaccess file will be read
+# 2. your Apache server has the following modules enabled
+#   a. LoadModule proxy_module modules/mod_proxy.so
+#   b. LoadModule proxy_http_module modules/mod_proxy_http.so
+#   c. LoadModule rewrite_module modules/mod_rewrite.so
+
+# if you want to uses httpS (as opposed to http) for service.prerender.cloud
+# 1. enable the ssl_module and turn on SSLProxyEngine
+#   a. LoadModule ssl_module modules/mod_ssl.so
+#   b. SSLProxyEngine on
+# 2. change http://service.prerender.cloud to https://service.prerender.cloud
+
+<IfModule mod_headers.c>
+    # RequestHeader set X-Prerender-Token "YOUR_TOKEN"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    <IfModule mod_proxy_http.c>
+        # TL;DR: 1. serve static assets if exist, else index.html
+        #        2. proxy to prerender.cloud unless it is prerender.cloud making the request
+
+        # If requested resource:
+        # is not /
+        # and is not index.html
+        # and exists as a file or directory
+        # then go to it as is
+        # (REQUEST_FILENAME is only relative in virtualhost context, so not usable)
+        RewriteCond %{REQUEST_URI} !^/$
+        RewriteCond %{REQUEST_URI} !^/index.html$
+        RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+        RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+        RewriteRule ^ - [L]
+
+        # uncomment these 3 lines for bots only
+        # RewriteCond %{HTTP_USER_AGENT} baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator [NC,OR]
+        # RewriteCond %{QUERY_STRING} _escaped_fragment_
+        # Header append Vary User-Agent
+
+        RewriteCond %{HTTP_USER_AGENT} !prerendercloud [NC]
+
+        RewriteRule ^(.*)$ http://service.prerender.cloud/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1 [P,END]
+
+        # If non existent
+        # Accept everything on index.html
+        RewriteRule ^ index.html
+    </IfModule>
+</IfModule>
