@@ -8,6 +8,7 @@
 #   a. LoadModule proxy_module modules/mod_proxy.so
 #   b. LoadModule proxy_http_module modules/mod_proxy_http.so
 #   c. LoadModule rewrite_module modules/mod_rewrite.so
+#   d. LoadModule deflate_module modules/mod_deflate.so
 
 # if you want to uses httpS (as opposed to http) for service.prerender.cloud
 # 1. enable the ssl_module and turn on SSLProxyEngine
@@ -23,6 +24,21 @@
     RewriteEngine On
 
     <IfModule mod_proxy_http.c>
+        # TL;DR: use gzip for communication between this Apache instance and service.prerender.cloud
+        #        even if the client is not gzip capable (in which case we'll uncompress for them)
+        SetEnvIf Accept-Encoding "(.*)" ORIGINAL_ACCEPT_ENCODING=$1
+        RequestHeader set original-accept-encoding "%{ORIGINAL_ACCEPT_ENCODING}e"
+        RequestHeader add accept-encoding gzip
+        FilterDeclare gzip CONTENT_SET
+        # Apache <= 2.2
+        # FilterProvider gzip inflate req=original-accept-encoding !$gzip
+        # Apache >= 2.4
+        FilterProvider gzip inflate "%{req:original-accept-encoding} !~ /gzip/"
+        FilterChain gzip
+        Header set Vary "Accept-Encoding"
+
+
+
         # TL;DR: 1. serve static assets if exist, else index.html
         #        2. proxy to prerender.cloud unless it is prerender.cloud making the request
 
