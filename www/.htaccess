@@ -55,7 +55,7 @@
         RewriteRule ^ - [L]
 
         # uncomment these 3 lines for bots only
-        # RewriteCond %{HTTP_USER_AGENT} baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator [NC,OR]
+        # RewriteCond %{HTTP_USER_AGENT} googlebot|yahoo|bingbot|baiduspider|twitterbot|facebookexternalhit|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator|redditbot|Applebot|WhatsApp|flipboard|tumblr|bitlybot [NC,OR]
         # RewriteCond %{QUERY_STRING} _escaped_fragment_
         # Header append Vary User-Agent
 
