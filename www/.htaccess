@@ -61,7 +61,7 @@
 
         RewriteCond %{HTTP_USER_AGENT} !prerendercloud [NC]
         #                                                                              if END throws an error, use L instead
-        RewriteRule ^(.*)$ http://10.200.10.1:3001/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1 [P,END]
+        RewriteRule ^(.*)$ http://service.prerender.cloud/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1 [P,END]
 
         # If non existent
         # Accept everything on index.html
