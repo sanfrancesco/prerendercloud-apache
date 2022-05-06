@@ -1,8 +1,10 @@
-
-![image](https://cloud.githubusercontent.com/assets/22159102/21554484/9d542f5a-cdc4-11e6-8c4c-7730a9e9e2d1.png)
-
 # prerendercloud-apache
-apache middleware for prerendering javascript-rendered pages with https://www.prerender.cloud for isomorphic/universal server side rendering
+
+<img align="right" src="https://cloud.githubusercontent.com/assets/22159102/21554484/9d542f5a-cdc4-11e6-8c4c-7730a9e9e2d1.png">
+
+![Github Actions CI](https://github.com/sanfrancesco/prerendercloud-nodejs/actions/workflows/node.js.yml/badge.svg)
+
+Apache middleware for pre-rendering JavaScript single page apps with [Headless-Render-API.com](https://headless-render-api.com) (formerly named prerender.cloud from 2016 - 2022)
 
 ## Usage
 * The [www/.htaccess](www/.htaccess) file is intended as a drop in config for a single standard, single Apache static host serving a single page application (redirects 404s to index.html)

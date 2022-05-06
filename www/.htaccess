@@ -1,6 +1,6 @@
 # instructions
-# 1. Uncomment and change YOUR_TOKEN to your prerender.cloud token (after you've created an account at prerender.cloud)
-# 2. optionally enable the "bots only" config (uncomment 2 lines) - otherwise, the default is to prerender all requests
+# 1. Uncomment and change YOUR_TOKEN to your Headless-Render-API.com token (after you've created an account at headless-render-api.com)
+# 2. optionally enable the "bots only" config (uncomment 2 lines) - otherwise, the default is to pre-render all requests
 
 # assumptions
 # 1. your <Directory /> config has `AllowOverride All` so that this .htaccess file will be read
@@ -10,11 +10,11 @@
 #   c. LoadModule rewrite_module modules/mod_rewrite.so
 #   d. LoadModule deflate_module modules/mod_deflate.so
 
-# if you want to uses httpS (as opposed to http) for service.prerender.cloud
+# if you want to uses httpS (as opposed to http) for service.headless-render-api.com
 # 1. enable the ssl_module and turn on SSLProxyEngine
 #   a. LoadModule ssl_module modules/mod_ssl.so
 #   b. SSLProxyEngine on
-# 2. change http://service.prerender.cloud to https://service.prerender.cloud
+# 2. change http://service.headless-render-api.com to https://service.headless-render-api.com
 
 <IfModule mod_headers.c>
     # RequestHeader set X-Prerender-Token "YOUR_TOKEN"
@@ -24,7 +24,7 @@
     RewriteEngine On
 
     <IfModule mod_proxy_http.c>
-        # TL;DR: use gzip for communication between this Apache instance and service.prerender.cloud
+        # TL;DR: use gzip for communication between this Apache instance and service.headless-render-api.com
         #        even if the client is not gzip capable (in which case we'll uncompress for them)
         SetEnvIf Accept-Encoding "(.*)" ORIGINAL_ACCEPT_ENCODING=$1
         RequestHeader set original-accept-encoding "%{ORIGINAL_ACCEPT_ENCODING}e"
@@ -40,7 +40,7 @@
 
 
         # TL;DR: 1. serve static assets if exist, else index.html
-        #        2. proxy to prerender.cloud unless it is prerender.cloud making the request
+        #        2. proxy to service.headless-render-api.com unless it is service.headless-render-api.com making the request
 
         # If requested resource:
         # is not /
@@ -61,7 +61,7 @@
 
         RewriteCond %{HTTP_USER_AGENT} !prerendercloud [NC]
         #                                                                              if END throws an error, use L instead
-        RewriteRule ^(.*)$ http://service.prerender.cloud/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1 [P,END]
+        RewriteRule ^(.*)$ http://service.headless-render-api.com/%{REQUEST_SCHEME}://%{HTTP_HOST}/$1 [P,END]
 
         # If non existent
         # Accept everything on index.html
